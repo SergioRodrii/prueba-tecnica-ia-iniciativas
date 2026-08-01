@@ -1,0 +1,12 @@
+services:
+  backend-fastapi:
+    build: ./backend-fastapi
+    env_file: .env
+
+  backend-dotnet:
+    build: ./backend-dotnet
+    env_file: .env
+
+  frontend:
+    build: ./frontend
+    env_file: .env

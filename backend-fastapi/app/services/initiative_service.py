@@ -1,0 +1,2 @@
+class InitiativeService:
+    pass

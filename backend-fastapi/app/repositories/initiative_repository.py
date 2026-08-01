@@ -1,0 +1,2 @@
+class InitiativeRepository:
+    pass
