@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -20,3 +22,9 @@ class InitiativeRepository:
 
     def get_by_id(self, initiative_id: int) -> Initiative | None:
         return self.database_session.get(Initiative, initiative_id)
+
+    def save_analysis_result(self, initiative: Initiative, analysis_result: dict[str, Any]) -> Initiative:
+        initiative.analysis_result = analysis_result
+        self.database_session.commit()
+        self.database_session.refresh(initiative)
+        return initiative

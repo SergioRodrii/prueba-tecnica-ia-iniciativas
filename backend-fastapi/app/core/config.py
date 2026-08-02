@@ -1,10 +1,19 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+project_root = Path(__file__).resolve().parents[3]
 
-    database_url: str = "sqlite:///./initiatives.db"
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=project_root / ".env", extra="ignore")
+
+    database_url: str
+    
+    ollama_base_url: str
+    ollama_model: str
+    ollama_timeout_seconds: float
 
 
 settings = Settings()
