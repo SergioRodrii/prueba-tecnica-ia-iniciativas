@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     ollama_base_url: str
     ollama_model: str
     ollama_timeout_seconds: float
+    
+    cors_allowed_origins: str
 
 
 settings = Settings()
