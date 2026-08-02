@@ -5,7 +5,7 @@ Stack:
 - Backend principal: FastAPI (Python), capas separadas: routers / services / repositories.
 - Backend secundario: .NET (ASP.NET Core Web API), que expone los mismos endpoints y
   para el análisis con IA invoca por HTTP al backend FastAPI (no reimplementa la IA).
-- Base de datos: SQLite (cada backend tiene su propia base).
+- Base de datos: SQLite.
 - Frontend: React + Vite, configurable por variable de entorno para apuntar a
   FastAPI o a .NET. 
 - IA: Ollama corriendo localmente, pero el proveedor debe estar desacoplado
