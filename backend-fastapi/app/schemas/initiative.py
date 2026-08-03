@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 
 class InitiativeCreate(BaseModel):
@@ -23,3 +23,8 @@ class InitiativeResponse(BaseModel):
     expected_benefit: str | None
     created_at: datetime
     analysis_result: dict[str, Any] | None
+
+    @field_serializer("created_at")
+    def serialize_created_at(self, value: datetime) -> str:
+        normalized_value = value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
+        return normalized_value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")

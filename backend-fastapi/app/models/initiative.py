@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from sqlalchemy import JSON, DateTime, String, Text, func
@@ -16,5 +16,10 @@ class Initiative(Base):
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
     business_problem: Mapped[str | None] = mapped_column(Text, nullable=True)
     expected_benefit: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
     analysis_result: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)

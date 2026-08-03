@@ -4,7 +4,17 @@ import AnalysisResult from "./AnalysisResult";
 
 function formatDate(value) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(date);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  const formattedDate = new Intl.DateTimeFormat("es-CO", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "America/Bogota",
+  }).format(date);
+
+  return formattedDate;
 }
 
 export default function InitiativeCard({ initiative, onAnalyze }) {
