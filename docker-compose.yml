@@ -1,12 +1,51 @@
 services:
   backend-fastapi:
-    build: ./backend-fastapi
-    env_file: .env
+    build:
+      context: ./backend-fastapi
+      dockerfile: Dockerfile
+    container_name: backend-fastapi
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////app/data/initiatives.db
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.1}
+      - OLLAMA_TIMEOUT_SECONDS=${OLLAMA_TIMEOUT_SECONDS:-3600}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - shared-db-data:/app/data
 
   backend-dotnet:
-    build: ./backend-dotnet
-    env_file: .env
+    build:
+      context: ./backend-dotnet
+      dockerfile: Dockerfile
+    container_name: backend-dotnet
+    ports:
+      - "5001:5001"
+    environment:
+      - ConnectionStrings__InitiativesDb=Data Source=/app/data/initiatives.db;Cache=Shared
+      - FASTAPI_BASE_URL=http://backend-fastapi:8000
+      - FASTAPI_TIMEOUT_SECONDS=${FASTAPI_TIMEOUT_SECONDS:-3600}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+    depends_on:
+      - backend-fastapi
+    volumes:
+      - shared-db-data:/app/data
 
   frontend:
-    build: ./frontend
-    env_file: .env
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend-fastapi
+      - backend-dotnet
+
+volumes:
+  shared-db-data:
